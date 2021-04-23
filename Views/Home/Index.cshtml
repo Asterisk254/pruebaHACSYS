@@ -1,0 +1,77 @@
+﻿@{
+	ViewData["Title"] = "Home Page";
+}
+
+<div class="seccion1">
+	<div id="formulario">
+        <form method="get" v-on:submit="generarReporte">
+            <label>ID del incidente:</label><br>
+            <input id="caja" type="number" v-model="id"><br>
+            <label>Fecha del incidente:</label><br>
+            <input id="caja" type="text" v-model="fecha"><br>
+            <label>Descripcion del incidente:</label><br>
+            <input id="caja" type="text" v-model="descripcion"><br>
+            <label>Nombre de la persona reportando:</label><br>
+            <input id="caja" type="text" v-model="nombre"><br>
+            <label>Acciones tomadas:</label><br>
+            <input id="caja" type="text" v-model="acciones"><br>
+            <label>Estatus del incidente:</label><br>
+            <input id="caja" type="text" v-model="estatus"><br>
+            <input type="submit" id="crear" value="Generar">
+        </form>
+		<h2>Incidentes</h2>
+		<p>{{fecha}}</p>
+		<p>{{descripcion}}</p>
+		<p>{{nombre}}</p>
+		<p>{{acciones}}</p>
+		<p>{{estatus}}</p>
+	
+		<div class="row">
+			<div class="col-md-6">
+                <ul class="list-group">
+                    <li v-for="element in datos" class="list-group-item">
+                        FECHA: {{element.fecha}} / DESCRIPCION: {{element.descripcion}} <br> NOMBRE: {{element.nombre}} / ACCIONES: {{element.acciones}} <br> ESTATUS: {{element.estatus}}
+                    </li>
+                </ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<script>
+	
+		var formulario = new Vue({
+			el: "#formulario",
+			data: {
+				fecha: " ",
+				descripcion: " ",
+				nombre: " ",
+				acciones: " ",
+				estatus: " ",
+				id: " ",
+				datos: []
+			},
+			created: function () {
+				this.getReporte();
+			},
+			methods: {
+				getReporte: function () {
+					this.datos = [];
+					this.$http.get("https://localhost:44368/api/Reporte").then(function (response) {
+						this.datos = response.body;
+					});
+				},
+				generarReporte: function () {
+                    this.datos = [];
+                    this.$http.post("https://localhost:44368/api/Reporte").then(function (response) {
+                        this.datos = response.body;
+                    });
+                }
+
+			}
+		})
+
+	</script>
+
+}
